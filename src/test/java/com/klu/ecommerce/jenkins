@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven'
+        jdk 'JDK17'
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/suneethabulla/hospital-backend-jenkins.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean install -DskipTests'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying Spring Boot Application...'
+                sh 'nohup java -jar target/*.jar &'
+            }
+        }
+    }
+}
